@@ -155,21 +155,30 @@ const createPlaylist = async (req, res) => {
   const { newTitle } = req.body;
 
   try {
-    const findUserData = await UserVideo.findOne({ author: user._id });
+    let findUserData = await UserVideo.findOne({ author: user._id });
 
     if (!findUserData) {
       return getResponse(res, 400, "User data not found");
     }
 
-    const findPlaylist = await findUserData.playlists.find(
+    let findPlaylist = await findUserData.playlists.find(
       (playlist) => playlist.title === newTitle
     );
     if (!findPlaylist) {
-      await findUserData.playlists.push({ title: newTitle });
+      await findUserData.playlists.push({ title: newTitle  , videos : []});
+      await findUserData.save()
     }
 
+    findUserData = await UserVideo.findOne({ author: user._id });
+
+    findPlaylist = await findUserData.playlists.find(
+      (playlist) => playlist.title === newTitle
+    );
+
+    
+
     const findVideo = await findPlaylist.videos.find((item)=>item._id.toHexString() === video.id);
-    console.log(findVideo)
+    
     if(findVideo){
       return getResponse(res,400,"Video already there")
     }
