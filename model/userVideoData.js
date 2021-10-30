@@ -17,10 +17,9 @@ const userVideoSchema = new mongoose.Schema(
     ],
     playlists: [
       {
-        title: {
-          type: String,
-          required: true,
-          unique:true
+        id: mongoose.Schema.Types.ObjectId , 
+        title:{
+          type : String
         },
         videos: [
           {

@@ -25,15 +25,12 @@ const register = async(req,res)=>{
         password =  bcrypt.hashSync(password, 12);
         const newUser = new User({username , email , password});
         
-        await newUser.save(async(err , docs)=>{
-            if(err) throw err
-            
-            const newUserVideo = new UserVideo({ author : docs._id , likedVideos : [] , history: [] , playlists : [{
-                title : "Watch later",
-                videos : []
-            }
-            ]});
-            await newUserVideo.save(async(err , docs)=>{
+        await newUser.save();
+        const newUserVideo = new UserVideo({ author : newUser._id , likedVideos : [] , history: [] , playlists : [{
+            title : `watch later`,
+            videos : []
+            }]});
+        await newUserVideo.save(async(err , docs)=>{
                 if(err) throw err
                 const token =  generateToken({_id : docs.author})
                 res.status(200).json({
@@ -45,7 +42,7 @@ const register = async(req,res)=>{
                 })
             })
             
-        })
+        
     
     }
     catch(err){
