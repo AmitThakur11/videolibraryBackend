@@ -26,9 +26,12 @@ const getUserInfo = async (req,res)=>{
 
 const addView = async (req,res)=>{
   const user = req.user
+  const video = req.video
   try{
-    const video = await video.findById(user);
-    getResponse(res,200,"viewer finding", video)
+    const videoData = await Video.findById(video._id);
+    await videoData.views.push(user);
+    await videoData.save()
+    getResponse(res,200,"viewer finding", videoData)
 
   }catch(err){
     res.status(500).json({
@@ -304,7 +307,8 @@ const videoAction = {
   likeVideo,
   createPlaylist,
   removePlaylist,
-  removeVideoFromPlaylist
+  removeVideoFromPlaylist,
+  addView
 };
 
 module.exports = videoAction;

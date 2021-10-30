@@ -7,9 +7,11 @@ router.use(tokenVerify)
 
 router.get("/",videoAction.getUserInfo)
 
+
 router.delete("/history/remove",videoAction.clearHistory)
 
 router.param("video_id",eval_param.video_param)
+router.post("/views/:video_id",videoAction.addView)
 router.route("/history/:video_id")
 .post(videoAction.addToHistory)
 .delete(videoAction.removeFromHistory)

@@ -22,13 +22,13 @@ const register = async(req,res)=>{
             })
         }
     
-        password = await bcrypt.hashSync(password, 12);
+        password =  bcrypt.hashSync(password, 12);
         const newUser = new User({username , email , password});
         
         await newUser.save(async(err , docs)=>{
             if(err) throw err
             
-            const newUserVideo = new UserVideo({ author : docs._id , likedVideos : [] , history: [] , playlist : [{
+            const newUserVideo = new UserVideo({ author : docs._id , likedVideos : [] , history: [] , playlists : [{
                 title : "Watch later",
                 videos : []
             }
