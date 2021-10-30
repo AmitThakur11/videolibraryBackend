@@ -8,12 +8,8 @@ const videoSchema = new mongoose.Schema(
     creator: String,
     creatorUrl: String,
     views: {
-      type: Number,
-      default: 0,
-    },
-    likes: {
-      type: Number,
-      default: 0,
+      type: mongoose.Schema.Types.ObjectId,
+      ref : "User"
     },
   },
   {

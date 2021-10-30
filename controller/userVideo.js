@@ -1,5 +1,6 @@
 const getResponse = require("./utils.js");
 const UserVideo = require("../model/userVideoData");
+const Video = require("../model/video")
 
 
 
@@ -23,6 +24,19 @@ const getUserInfo = async (req,res)=>{
 }
 
 
+const addView = async (req,res)=>{
+  const user = req.user
+  try{
+    const video = await video.findById(user);
+    getResponse(res,200,"viewer finding", video)
+
+  }catch(err){
+    res.status(500).json({
+      success :false,
+      msg : err.message
+    })
+  }
+}
 
 
 
