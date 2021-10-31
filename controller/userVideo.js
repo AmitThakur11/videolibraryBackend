@@ -224,20 +224,21 @@ const removeVideoFromPlaylist = async(req,res)=>{
     const user = req.user
     const playlist = req.playlist;
     const video = req.video;
-    console.log(playlist)
+    console.log("video")
+    console.log(video)
 
     const findUserData = await UserVideo.findOne({author : user._id});
     if(!findUserData){
       getResponse(res,400,"User data not found")
     }
 
-    const findPlaylist = await findUserData.playlists.find((item)=>item.id === playlist);
+    const findPlaylist = await findUserData.playlists.find(({_id})=>_id.toHexString() === playlist);
     console.log("findPlaylist ",findPlaylist)
     if(!findPlaylist){
       getResponse(res,400,"Playlist not available")
     }
     await findUserData.playlists
-      .find((item) => item.id === playlist)
+      .find((item) => item._id.toHexString() === playlist)
       .videos.pull(video._id);
 
     await findUserData.save(async(err,docs)=>{
