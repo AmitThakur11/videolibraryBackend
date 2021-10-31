@@ -271,12 +271,7 @@ const removePlaylist = async (req, res) => {
     if (!findUserData) {
       return getResponse(res, 400, "User data not found");
     }
-
-    console.log(playlist);
-    console.log(findUserData.playlists[0].id);
-    const findPlaylist = await findUserData.playlists.find(
-      (item) => item.id === playlist
-    );
+    const findPlaylist = await findUserData.playlists.find(({_id})=>_id.toHexString() === playlist)
     console.log(findPlaylist);
     if (!findPlaylist) {
       return getResponse(res, 400, "Playlist not found");
