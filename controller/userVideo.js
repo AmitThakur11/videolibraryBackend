@@ -49,9 +49,9 @@ const addToHistory = async (req, res) => {
   const video = req.video;
   try {
     const findUserData = await UserVideo.findOne({ author: user._id });
-    if (!findUserData) {
-      return getResponse(res, 400, "User Data  Not Found");
-    }
+    // if (!findUserData) {
+    //   return getResponse(res, 400, "User Data  Not Found");
+    // }
 
     const checkDuplicate = await findUserData.history.find(
       (history) => history.toHexString() === video.id
@@ -65,7 +65,7 @@ const addToHistory = async (req, res) => {
     await findUserData.save(async (err, docs) => {
       if (err) throw err;
       const popData = await docs.populate("history");
-      getResponse(res, 200, "User Data Found", popData);
+      getResponse(res, 200, "History updated", popData);
     });
   } catch (error) {
     getResponse(res, 500, error.message);
@@ -84,20 +84,20 @@ const removeFromHistory = async (req, res) => {
   const video = req.video;
   try {
     const findUserData = await UserVideo.findOne({ author: user._id });
-    if (!findUserData) {
-      return getResponse(res, 400, "User Data  Not Found");
-    }
+    // if (!findUserData) {
+    //   return getResponse(res, 400, "User Data  Not Found");
+    // }
 
     const videoForDeletion = await findUserData.history.find(
       (history) => history.toHexString() === video.id
     );
     if (!videoForDeletion) {
-      return getResponse(res, 400, "video not found");
+      return getResponse(res, 400, "Video not found");
     }
     await findUserData.history.pull(videoForDeletion);
     await findUserData.save();
     const popData = await findUserData.populate("history");
-    getResponse(res, 200, "History updated", popData);
+    getResponse(res, 200, "Video removed", popData);
   } catch (error) {
     getResponse(res, 500, error.message);
   }
@@ -112,12 +112,12 @@ const clearHistory = async (req, res) => {
   const user = req.user;
   try {
     let findUserData = await UserVideo.findOne({ author: user._id });
-    if (!findUserData) {
-      return getResponse(res, 400, "User Data  Not Found");
-    }
+    // if (!findUserData) {
+    //   return getResponse(res, 400, "User data  not found");
+    // }
 
     findUserData.history = [];
-    console.log(findUserData);
+    
     await findUserData.save();
     const popData = await findUserData.populate("history");
     getResponse(res, 200, "History all cleared", popData);
@@ -134,15 +134,14 @@ const likeVideo = async (req, res) => {
   const video = req.video;
   try {
     const findUserData = await UserVideo.findOne({ author: user._id });
-    if (!findUserData) {
-      return getResponse(res, 400, "User data not found");
-    }
+    // if (!findUserData) {
+    //   return getResponse(res, 400, "User data not found");
+    // }
 
     const checkDuplicate = findUserData.likedVideos.find(
       (data) => data.toHexString() === video.id
     );
-    console.log(findUserData);
-    console.log(checkDuplicate);
+    
     if (checkDuplicate) {
       await findUserData.likedVideos.pull(checkDuplicate);
     } else {
@@ -207,7 +206,7 @@ const createPlaylist = async (req, res) => {
     await findUserData.save(async (err, docs) => {
       if (err) throw err;
       const popData = await findUserData.populate("playlists.videos");
-      getResponse(res, 200, "playlist updated0", popData);
+      getResponse(res, 200, "playlist updated", popData);
     });
   } catch (err) {
     getResponse(res, 500, err.message);
@@ -224,16 +223,14 @@ const removeVideoFromPlaylist = async(req,res)=>{
     const user = req.user
     const playlist = req.playlist;
     const video = req.video;
-    console.log("video")
-    console.log(video)
+
 
     const findUserData = await UserVideo.findOne({author : user._id});
-    if(!findUserData){
-      getResponse(res,400,"User data not found")
-    }
+    // if(!findUserData){
+    //   getResponse(res,400,"User data not found")
+    // }
 
     const findPlaylist = await findUserData.playlists.find(({_id})=>_id.toHexString() === playlist);
-    console.log("findPlaylist ",findPlaylist)
     if(!findPlaylist){
       getResponse(res,400,"Playlist not available")
     }
@@ -244,7 +241,7 @@ const removeVideoFromPlaylist = async(req,res)=>{
     await findUserData.save(async(err,docs)=>{
       if(err)throw err;
       const popData = await findUserData.populate("playlists.videos");
-      getResponse(res,200,"playlist updated", popData)
+      getResponse(res,200,"Playlist updated", popData)
     })
 
 
@@ -268,11 +265,10 @@ const removePlaylist = async (req, res) => {
 
     const findUserData = await UserVideo.findOne({ author: user._id });
 
-    if (!findUserData) {
-      return getResponse(res, 400, "User data not found");
-    }
+    // if (!findUserData) {
+    //   return getResponse(res, 400, "User data not found");
+    // }
     const findPlaylist = await findUserData.playlists.find(({_id})=>_id.toHexString() === playlist)
-    console.log(findPlaylist);
     if (!findPlaylist) {
       return getResponse(res, 400, "Playlist not found");
     }

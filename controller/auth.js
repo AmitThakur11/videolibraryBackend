@@ -18,7 +18,7 @@ const register = async(req,res)=>{
         if(findUser){
             return res.status(400).json({
                 success : false,
-                msg : "This email is already registered"
+                msg : " This email is already registered"
             })
         }
     
@@ -35,7 +35,7 @@ const register = async(req,res)=>{
                 const token =  generateToken({_id : docs.author})
                 res.status(200).json({
                     success : true,
-                    msg : "user registered successfuly",
+                    msg : "User registered successfuly",
                     token
         
         
@@ -59,12 +59,12 @@ const login = async(req,res)=>{
         let {email ,password} = req.body;
 
     const findUser = await User.findOne({email : email});
-    if(!findUser){
-        return res.status(400).json({
-            success : false,
-            msg : "User not exist"
-        })
-    }
+    // if(!findUser){
+    //     return res.status(400).json({
+    //         success : false,
+    //         msg : "User not exist"
+    //     })
+    // }
 
     const verification = await bcrypt.compare(password , findUser.password);
     if(!verification){
@@ -76,7 +76,7 @@ const login = async(req,res)=>{
     const token = generateToken({_id : findUser._id})
      return res.status(200).json({
          success : true,
-         msg :"logged in successfully",
+         msg :"Logged in successfully",
          token
      })
     }
